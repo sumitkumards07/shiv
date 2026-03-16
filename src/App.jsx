@@ -9,6 +9,63 @@ const CONTACT_PHONE_DISPLAY = '+91 93065 92069'
 const CONTACT_PHONE_E164 = '+919306592069'
 const WHATSAPP_NUMBER_E164 = '919306592069'
 
+const POLICIES = {
+  'Terms & Conditions': {
+    title: 'Terms & Conditions',
+    content: (
+      <div className="space-y-4">
+        <p>Welcome to Shree Mahakaleshwar Bhakt Niwas. By accessing this website and booking our services, you agree to comply with and be bound by the following terms and conditions.</p>
+        <h4 className="font-bold text-slate-900">1. Booking and Cancellation</h4>
+        <p>All bookings are subject to availability. Full payment or a deposit may be required at the time of booking to secure your reservation.</p>
+        <h4 className="font-bold text-slate-900">2. Check-in and Check-out</h4>
+        <p>Check-in time is 12:00 PM and Check-out time is 11:00 AM. Early check-in or late check-out is subject to availability and may incur additional charges.</p>
+        <h4 className="font-bold text-slate-900">3. Guest Conduct</h4>
+        <p>Guests are expected to maintain decorum and respect the sanctity of the place. Any behavior deemed inappropriate may result in immediate eviction without refund.</p>
+      </div>
+    )
+  },
+  'Privacy Policy': {
+    title: 'Privacy Policy',
+    content: (
+      <div className="space-y-4">
+        <p>Your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your personal information.</p>
+        <h4 className="font-bold text-slate-900">1. Information Collection</h4>
+        <p>We collect information you provide directly to us, such as when you make a booking, subscribe to our newsletter, or contact us.</p>
+        <h4 className="font-bold text-slate-900">2. Use of Information</h4>
+        <p>We use your information to process bookings, provide customer support, and send promotional communications if you have opted in.</p>
+        <h4 className="font-bold text-slate-900">3. Data Security</h4>
+        <p>We implement industry-standard security measures to protect your personal data from unauthorized access or disclosure.</p>
+      </div>
+    )
+  },
+  'Disclaimer': {
+    title: 'Disclaimer',
+    content: (
+      <div className="space-y-4">
+        <p>The information provided on this website is for general informational purposes only. While we strive for accuracy, we make no representations or warranties of any kind about the completeness or reliability of the information.</p>
+        <h4 className="font-bold text-slate-900">1. Limitation of Liability</h4>
+        <p>In no event will Shree Mahakaleshwar Bhakt Niwas be liable for any loss or damage arising out of, or in connection with, the use of this website.</p>
+        <h4 className="font-bold text-slate-900">2. External Links</h4>
+        <p>Our website may contain links to external sites that are not operated by us. We have no control over the content and practices of these sites.</p>
+      </div>
+    )
+  },
+  'Cancellation & Refund Policy': {
+    title: 'Cancellation & Refund Policy',
+    content: (
+      <div className="space-y-4">
+        <p>We understand that plans can change. Our cancellation and refund policy is as follows:</p>
+        <h4 className="font-bold text-slate-900">1. Cancellation Timelines</h4>
+        <p>- Cancellations made 48 hours or more before check-in: Full refund (minus processing fees).<br/>- Cancellations made less than 48 hours before check-in: No refund.</p>
+        <h4 className="font-bold text-slate-900">2. Refund Processing</h4>
+        <p>Refunds will be processed within 7-10 working days to the original mode of payment.</p>
+        <h4 className="font-bold text-slate-900">3. No-Show Policy</h4>
+        <p>In case of a no-show, the entire booking amount will be forfeited.</p>
+      </div>
+    )
+  }
+};
+
 const navLinks = [
   { label: 'Home', href: '#home' },
   { label: 'About Us', href: '#about' },
@@ -57,6 +114,7 @@ const amenities = [
 
 function App() {
   const [enquiryOpen, setEnquiryOpen] = useState(false)
+  const [activePolicy, setActivePolicy] = useState(null)
   const [selectedRoom, setSelectedRoom] = useState('')
   const [enquiryDefaults, setEnquiryDefaults] = useState({
     checkIn: '',
@@ -442,9 +500,21 @@ function App() {
 
             <FooterCol
               title="Quick Links"
-              links={['Home', 'About Us', 'Bhakt Niwas', 'Terms & Conditions']}
+              links={[
+                { label: 'Home', href: '#home' },
+                { label: 'About Us', href: '#about' },
+                { label: 'Bhakt Niwas', href: '#rooms' },
+                { label: 'Terms & Conditions', onClick: () => setActivePolicy('Terms & Conditions') },
+              ]}
             />
-            <FooterCol title="Contact" links={['Inquires', 'Careers']} />
+            <FooterCol 
+              title="Policies" 
+              links={[
+                { label: 'Privacy Policy', onClick: () => setActivePolicy('Privacy Policy') },
+                { label: 'Disclaimer', onClick: () => setActivePolicy('Disclaimer') },
+                { label: 'Cancellation & Refund Policy', onClick: () => setActivePolicy('Cancellation & Refund Policy') },
+              ]} 
+            />
 
             <div>
               <div className="text-sm font-semibold">Newsletter Subscription</div>
@@ -483,6 +553,11 @@ function App() {
         roomTitle={selectedRoom}
         defaults={enquiryDefaults}
         onClose={() => setEnquiryOpen(false)}
+      />
+
+      <PolicyModal
+        policy={activePolicy ? POLICIES[activePolicy] : null}
+        onClose={() => setActivePolicy(null)}
       />
 
       <div className="fixed bottom-5 right-5 z-40 flex flex-col gap-3">
@@ -854,13 +929,83 @@ function FooterCol({ title, links }) {
       <div className="text-sm font-semibold">{title}</div>
       <ul className="mt-3 space-y-2 text-sm text-white/70">
         {links.map((l) => (
-          <li key={l}>
-            <a href="#" className="transition hover:text-white">
-              {l}
-            </a>
+          <li key={l.label}>
+            {l.onClick ? (
+              <button
+                type="button"
+                onClick={l.onClick}
+                className="transition hover:text-white"
+              >
+                {l.label}
+              </button>
+            ) : (
+              <a href={l.href} className="transition hover:text-white">
+                {l.label}
+              </a>
+            )}
           </li>
         ))}
       </ul>
+    </div>
+  )
+}
+
+function PolicyModal({ policy, onClose }) {
+  useEffect(() => {
+    if (!policy) return
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [policy, onClose])
+
+  if (!policy) return null
+
+  return (
+    <div
+      className="fixed inset-0 z-50 grid place-items-center p-4"
+      role="dialog"
+      aria-modal="true"
+    >
+      <button
+        type="button"
+        onClick={onClose}
+        className="absolute inset-0 bg-slate-950/55"
+      />
+
+      <div className="relative w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-soft ring-1 ring-slate-200">
+        <div className="flex items-start justify-between gap-4 bg-brand-navy px-5 py-4 text-white">
+          <div>
+            <div className="text-xs font-semibold text-white/70">POLICY</div>
+            <div className="mt-1 text-lg font-extrabold tracking-tight">
+              {policy.title}
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg bg-white/10 px-3 py-2 text-sm font-semibold text-white/90 ring-1 ring-white/15 transition hover:bg-white/15"
+          >
+            Close
+          </button>
+        </div>
+
+        <div className="max-h-[70vh] overflow-y-auto p-6 sm:p-8">
+          <div className="text-sm leading-relaxed text-slate-600">
+            {policy.content}
+          </div>
+          <div className="mt-10 border-t border-slate-100 pt-6">
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded bg-brand-navy px-5 py-2.5 text-xs font-extrabold tracking-wide text-white transition hover:bg-brand-navy2"
+            >
+              CLOSE
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
