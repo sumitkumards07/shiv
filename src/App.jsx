@@ -113,12 +113,6 @@ function App() {
 
           <div className="flex items-center gap-2">
             <a
-              href="#login"
-              className="hidden rounded px-3 py-1.5 text-sm text-white/85 transition hover:bg-white/10 sm:inline-block"
-            >
-              Log in
-            </a>
-            <a
               href="#learn-more"
               className="rounded bg-brand-gold px-3 py-1.5 text-sm font-semibold text-slate-950 shadow-sm transition hover:bg-brand-gold2"
             >
