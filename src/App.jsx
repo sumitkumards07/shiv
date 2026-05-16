@@ -5,9 +5,9 @@ import room2BedImg from './assets/room-2bed.png'
 import roomBestImg from './assets/room-best.png'
 import room4BedImg from './assets/room-4bed.png'
 
-const CONTACT_PHONE_DISPLAY = '+91 83978 78010'
-const CONTACT_PHONE_E164 = '+918397878010'
-const WHATSAPP_NUMBER_E164 = '918397878010'
+const CONTACT_PHONE_DISPLAY = '+91 95181 87996'
+const CONTACT_PHONE_E164 = '+919518187996'
+const WHATSAPP_NUMBER_E164 = '919518187996'
 
 const POLICIES = {
   'Terms & Conditions': {
